@@ -1,28 +1,142 @@
+
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Snapdragon</title>
-		<link rel="stylesheet" href="styles.css">
-		<script src="tracking.js"></script>
-	</head>
+  <head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="skeleton.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="tracking.js"></script>
+    <script src="interact.js"></script>
+  </head>
 
-	<body>
-		<header>Snapdragon</header>
+  <body>
+    <header>
+      <h1>Snapdragon</h1>
+      <p><b>Snap</b> a photo, <b>drag</b> its objects around.</p>
+    </header>
 
-		<!--APP BEGINS HERE-->
-		<section id="snap">
-			<button id="upload">Upload Photo</button>
-			<button id="camera">Take Photo</button>
-		</section>
+    <section id="snap">
+      <input type="file" id="file" name="file" class="inputfile" onchange="previewFile()">
+      <label for="file" class="button-primary">Upload Photo</label>
 
-		<section id="track">
-			<img src="http://via.placeholder.com/700x400">
-		</section>
+      <button id="camera" class="button-primary">Take Photo</button>
+    </section>
 
-		<section id="drag">
-			<img src="http://via.placeholder.com/700x400">
-		</section>
-		<!--APP ENDS HERE-->
-	</body>
+	<section id="track">
+      <img src="" alt="" id="img">
+      <button id="track" class="button-primary" onclick="trackPhoto();">Process Photo</button>		
+	</section>
+
+    <section id="drag">
+    </section>
+
+    <script>
+    function previewFile(){
+      var preview = document.querySelector('img');
+      var file    = document.querySelector('input[type=file]').files[0];
+      var reader  = new FileReader();
+
+      reader.onloadend = function () {
+         preview.src = reader.result;
+      }
+
+      if (file) {
+         reader.readAsDataURL(file);
+         trackPhoto();
+      } else {
+         preview.src = "";
+      }
+    }
+
+    previewFile();
+
+    function trackPhoto() {
+      var img = document.getElementById('img');
+      var demoContainer = document.querySelector('#drag');
+
+      tracking.ColorTracker.registerColor('green', function(r,g,b) {
+      	if (r < 150 && g > 150 && b < 200) {
+      		return true;
+      	}	
+      	return false;
+      });
+
+      var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow', 'green']);
+
+      tracker.on('track', function(event) {
+        event.data.forEach(function(rect) {
+          window.plot(rect.x, rect.y, rect.width, rect.height, rect.color);
+        });
+      });
+
+      tracking.track('#img', tracker);
+
+      window.plot = function(x, y, w, h, color) {
+        var rect = document.createElement('div');
+        document.querySelector('#track').appendChild(rect);
+        rect.classList.add('rect');
+        rect.style.border = '2px solid ' + color;
+        rect.style.width = w + 'px';
+        rect.style.height = h + 'px';
+        rect.style.left = (img.offsetLeft + x) + 'px';
+        rect.style.top = (img.offsetTop + y) + 'px';
+
+        var duplicate = document.createElement('div');
+        document.querySelector('#drag').appendChild(duplicate);
+        duplicate.classList.add('draggable');
+        duplicate.style.backgroundImage = "url(" + img.src + ")";
+        duplicate.style.backgroundPosition = "-" +  x + "px -" + y  + "px";
+        duplicate.style.height = h + 'px';
+        duplicate.style.width = w + 'px';
+      };
+    }
+
+    interact('.draggable')
+	  .draggable({
+	    // enable inertial throwing
+	    inertia: true,
+	    // keep the element within the area of it's parent
+	    restrict: {
+	      restriction: "parent",
+	      endOnly: true,
+	      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+	    },
+	    // enable autoScroll
+	    autoScroll: true,
+
+	    // call this function on every dragmove event
+	    onmove: dragMoveListener,
+	    // call this function on every dragend event
+	    onend: function (event) {
+	      var textEl = event.target.querySelector('p');
+
+	      textEl && (textEl.textContent =
+	        'moved a distance of '
+	        + (Math.sqrt(event.dx * event.dx +
+	                     event.dy * event.dy)|0) + 'px');
+	    }
+	  });
+
+	  function dragMoveListener (event) {
+	    var target = event.target,
+	        // keep the dragged position in the data-x/data-y attributes
+	        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+	        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+	    // translate the element
+	    target.style.webkitTransform =
+	    target.style.transform =
+	      'translate(' + x + 'px, ' + y + 'px)';
+
+	    // update the posiion attributes
+	    target.setAttribute('data-x', x);
+	    target.setAttribute('data-y', y);
+	  }
+
+	  // this is used later in the resizing and gesture demos
+	  window.dragMoveListener = dragMoveListener;
+    </script>
+  </body>
 </html>
