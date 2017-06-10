@@ -1,35 +1,38 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>tracking.js - color hello world</title>
 
-  <script src="tracking.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="skeleton.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="tracking.js"></script>
+    <script src="interact.js"></script>
+  </head>
 
-  <style>
-  .rect {
-    width: 80px;
-    height: 80px;
-    position: absolute;
-    left: -1000px;
-    top: -1000px;
-  }
-  </style>
-</head>
-<body>
+  <body>
+    <header>
+      <h1>Snapdragon</h1>
+      <p><b>Snap</b> a photo, <b>drag</b> its objects around.</p>
+    </header>
 
-  <div class="demo-frame">
-    <div class="demo-container">
-      <button onclick="trackPhoto();">tracking</button>
+    <section id="snap">
+      <input type="file" id="file" name="file" class="inputfile" onchange="previewFile()">
+      <label for="file" class="button-primary">Upload Photo</label>
 
-      <img id="img" src="psmove.png" />
-    </div>
-  </div>
+      <button id="camera" class="button-primary">Take Photo</button>
+    </section>
 
-  <script>
-    function trackPhoto() {
+    <section id="drag">
+      <img src="" alt="" id="img">
+      <button id="track" class="button-primary" onclick="trackPhoto();">Process Photo</button>
+    </section>
+
+    <script>
+      function trackPhoto() {
       var img = document.getElementById('img');
-      var demoContainer = document.querySelector('.demo-container');
+      var demoContainer = document.querySelector('#drag');
 
       var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
 
@@ -43,7 +46,7 @@
 
       window.plot = function(x, y, w, h, color) {
         var rect = document.createElement('div');
-        document.querySelector('.demo-container').appendChild(rect);
+        document.querySelector('#drag').appendChild(rect);
         rect.classList.add('rect');
         rect.style.border = '2px solid ' + color;
         rect.style.width = w + 'px';
@@ -52,7 +55,25 @@
         rect.style.top = (img.offsetTop + y) + 'px';
       };
     }
-  </script>
 
-</body>
+    function previewFile(){
+      var preview = document.querySelector('img'); //selects the query named img
+      var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+      var reader  = new FileReader();
+
+      reader.onloadend = function () {
+         preview.src = reader.result;
+      }
+
+      if (file) {
+         reader.readAsDataURL(file); //reads the data as a URL
+         trackPhoto();
+      } else {
+         preview.src = "";
+      }
+    }
+
+    previewFile();  //calls the function named previewFile()
+    </script>
+  </body>
 </html>
