@@ -33,7 +33,26 @@
     </section>
 
     <script>
-      function trackPhoto() {
+    function previewFile(){
+      var preview = document.querySelector('img');
+      var file    = document.querySelector('input[type=file]').files[0];
+      var reader  = new FileReader();
+
+      reader.onloadend = function () {
+         preview.src = reader.result;
+      }
+
+      if (file) {
+         reader.readAsDataURL(file);
+         trackPhoto();
+      } else {
+         preview.src = "";
+      }
+    }
+
+    previewFile();
+
+    function trackPhoto() {
       var img = document.getElementById('img');
       var demoContainer = document.querySelector('#drag');
 
@@ -66,7 +85,7 @@
 
         var duplicate = document.createElement('div');
         document.querySelector('#drag').appendChild(duplicate);
-        duplicate.classList.add('duplicate');
+        duplicate.classList.add('draggable');
         duplicate.style.backgroundImage = "url(" + img.src + ")";
         duplicate.style.backgroundPosition = "-" +  x + "px -" + y  + "px";
         duplicate.style.height = h + 'px';
@@ -74,24 +93,50 @@
       };
     }
 
-    function previewFile(){
-      var preview = document.querySelector('img'); //selects the query named img
-      var file    = document.querySelector('input[type=file]').files[0]; //sames as here
-      var reader  = new FileReader();
+    interact('.draggable')
+	  .draggable({
+	    // enable inertial throwing
+	    inertia: true,
+	    // keep the element within the area of it's parent
+	    restrict: {
+	      restriction: "parent",
+	      endOnly: true,
+	      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+	    },
+	    // enable autoScroll
+	    autoScroll: true,
 
-      reader.onloadend = function () {
-         preview.src = reader.result;
-      }
+	    // call this function on every dragmove event
+	    onmove: dragMoveListener,
+	    // call this function on every dragend event
+	    onend: function (event) {
+	      var textEl = event.target.querySelector('p');
 
-      if (file) {
-         reader.readAsDataURL(file); //reads the data as a URL
-         trackPhoto();
-      } else {
-         preview.src = "";
-      }
-    }
+	      textEl && (textEl.textContent =
+	        'moved a distance of '
+	        + (Math.sqrt(event.dx * event.dx +
+	                     event.dy * event.dy)|0) + 'px');
+	    }
+	  });
 
-    previewFile();  //calls the function named previewFile()
+	  function dragMoveListener (event) {
+	    var target = event.target,
+	        // keep the dragged position in the data-x/data-y attributes
+	        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+	        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+	    // translate the element
+	    target.style.webkitTransform =
+	    target.style.transform =
+	      'translate(' + x + 'px, ' + y + 'px)';
+
+	    // update the posiion attributes
+	    target.setAttribute('data-x', x);
+	    target.setAttribute('data-y', y);
+	  }
+
+	  // this is used later in the resizing and gesture demos
+	  window.dragMoveListener = dragMoveListener;
     </script>
   </body>
 </html>
