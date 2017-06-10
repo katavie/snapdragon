@@ -1,1 +1,23 @@
 <!DOCTYPE HTML>
+<html>
+	<head>
+	</head>
+
+	<body>
+		<canvas id="canvas1" width="679" height="450"></canvas>
+
+		<script>
+			var canvas = document.getElementById('canvas1');
+
+			var context = canvas.getContext("2d");
+			var img = new Image();
+			img.onload = function () {
+			    context.drawImage(img, 0, 0);
+			}
+			img.src = "psmove.png";
+
+			var dataURL = canvas.toDataURL();
+			console.log(dataURL);
+		</script>
+	</body>
+</html>
