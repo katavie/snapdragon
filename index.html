@@ -1,70 +1,58 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Snapdragon</title>
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link rel="stylesheet" href="skeleton.css">
-    <link rel="stylesheet" href="styles.css">
-    <script src="tracking.js"></script>
-    <script src="interact.js"></script>
-  </head>
-  
-  <body>
-	<header>
-		<h1>Snapdragon</h1>
-		<p><b>Snap</b> a photo, <b>drag</b> its objects around.</p>
-	</header>
+<head>
+  <meta charset="utf-8">
+  <title>tracking.js - color hello world</title>
 
-    <section id="snap">
-      <button id="upload" class="button-primary">Upload Photo</button>
-      <button id="camera" class="button-primary">Take Photo</button>
-    </section>
+  <script src="tracking.js"></script>
 
-    <section id="track">
-      <div class="demo-container">
-        <img id="img" src="psmove.png" />
-      </div>
-    </section>
+  <style>
+  .rect {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+  }
+  </style>
+</head>
+<body>
 
-    <section id="drag">
-      
-    </section>
+  <div class="demo-frame">
+    <div class="demo-container">
+      <button onclick="trackPhoto();">tracking</button>
 
-    <script>
-      window.onload = function() {
-        var img = document.getElementById('img');
-        var demoContainer = document.querySelector('.demo-container');
+      <img id="img" src="psmove.png" />
+    </div>
+  </div>
 
-        var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
+  <script>
+    function trackPhoto() {
+      var img = document.getElementById('img');
+      var demoContainer = document.querySelector('.demo-container');
 
-        tracker.on('track', function(event) {
-          event.data.forEach(function(rect) {
-            window.plot(rect.x, rect.y, rect.width, rect.height, rect.color);
-          });
+      var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
+
+      tracker.on('track', function(event) {
+        event.data.forEach(function(rect) {
+          window.plot(rect.x, rect.y, rect.width, rect.height, rect.color);
         });
+      });
 
-        tracking.track('#img', tracker);
+      tracking.track('#img', tracker);
 
-        window.plot = function(x, y, w, h, color) {
-          var rect = document.createElement('div');
-          document.querySelector('.demo-container').appendChild(rect);
-          rect.classList.add('rect');
-          rect.style.border = '2px solid ' + color;
-          rect.style.width = w + 'px';
-          rect.style.height = h + 'px';
-          rect.style.left = (img.offsetLeft + x) + 'px';
-          console.log("img.offsetLeft: " + img.offsetLeft + x);
-          console.log("img.offsetTop: " + img.offsetTop + h);
-          rect.style.top = (img.offsetTop + y) + 'px';
-
-          var duplicate = document.createElement('div');
-          document.querySelector('#drag').appendChild(duplicate);
-          duplicate.classList.add('duplicate');
-          duplicate.style.backgroundPosition = "-" + img.offsetLeft + "px -" + img.offsetTop + "px";
-          console.log("updated");
-        };
+      window.plot = function(x, y, w, h, color) {
+        var rect = document.createElement('div');
+        document.querySelector('.demo-container').appendChild(rect);
+        rect.classList.add('rect');
+        rect.style.border = '2px solid ' + color;
+        rect.style.width = w + 'px';
+        rect.style.height = h + 'px';
+        rect.style.left = (img.offsetLeft + x) + 'px';
+        rect.style.top = (img.offsetTop + y) + 'px';
       };
-    </script>
+    }
+  </script>
+
 </body>
 </html>
