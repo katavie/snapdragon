@@ -24,9 +24,12 @@
       <button id="camera" class="button-primary">Take Photo</button>
     </section>
 
-    <section id="drag">
+	<section id="track">
       <img src="" alt="" id="img">
-      <button id="track" class="button-primary" onclick="trackPhoto();">Process Photo</button>
+      <button id="track" class="button-primary" onclick="trackPhoto();">Process Photo</button>		
+	</section>
+
+    <section id="drag">
     </section>
 
     <script>
@@ -34,7 +37,14 @@
       var img = document.getElementById('img');
       var demoContainer = document.querySelector('#drag');
 
-      var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
+      tracking.ColorTracker.registerColor('green', function(r,g,b) {
+      	if (r < 150 && g > 150 && b < 200) {
+      		return true;
+      	}	
+      	return false;
+      });
+
+      var tracker = new tracking.ColorTracker(['magenta', 'cyan', 'yellow', 'green']);
 
       tracker.on('track', function(event) {
         event.data.forEach(function(rect) {
@@ -46,13 +56,21 @@
 
       window.plot = function(x, y, w, h, color) {
         var rect = document.createElement('div');
-        document.querySelector('#drag').appendChild(rect);
+        document.querySelector('#track').appendChild(rect);
         rect.classList.add('rect');
         rect.style.border = '2px solid ' + color;
         rect.style.width = w + 'px';
         rect.style.height = h + 'px';
         rect.style.left = (img.offsetLeft + x) + 'px';
         rect.style.top = (img.offsetTop + y) + 'px';
+
+        var duplicate = document.createElement('div');
+        document.querySelector('#drag').appendChild(duplicate);
+        duplicate.classList.add('duplicate');
+        duplicate.style.backgroundImage = "url(" + img.src + ")";
+        duplicate.style.backgroundPosition = "-" +  x + "px -" + y  + "px";
+        duplicate.style.height = h + 'px';
+        duplicate.style.width = w + 'px';
       };
     }
 

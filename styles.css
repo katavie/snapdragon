@@ -33,15 +33,8 @@ h1 {
 	top: -1000px;
 }
 
-#drag {
-	/*background-image: url('psmove.png');*/
-}
-
 .duplicate {
-	border: 1px solid #000;
-	background-image: url('psmove.png');
-	width: 80px;
-	height: 80px;
+	margin: auto;
 }
 
 .inputfile {
