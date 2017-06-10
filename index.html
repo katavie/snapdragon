@@ -21,7 +21,7 @@
     </section>
 
     <section id="drag">
-      <img src="http://via.placeholder.com/700x400">
+      
     </section>
 
     <script>
@@ -47,7 +47,15 @@
           rect.style.width = w + 'px';
           rect.style.height = h + 'px';
           rect.style.left = (img.offsetLeft + x) + 'px';
+          console.log("img.offsetLeft: " + img.offsetLeft + x);
+          console.log("img.offsetTop: " + img.offsetTop + h);
           rect.style.top = (img.offsetTop + y) + 'px';
+
+          var duplicate = document.createElement('div');
+          document.querySelector('#drag').appendChild(duplicate);
+          duplicate.classList.add('duplicate');
+          duplicate.style.backgroundPosition = "-" + img.offsetLeft + "px -" + img.offsetTop + "px";
+          console.log("updated");
         };
       };
     </script>
