@@ -6,23 +6,47 @@
 	box-sizing: border-box;
 	font-family: Raleway, Arial, sans-serif;
 	text-align: center;
+	font-size: 1.65rem;
+	line-height: 160%;
+}
+
+body {
+	background: #fbfbfb;
+}
+
+#logo {
+	width: 125px;
+	margin: .5rem 0;
 }
 
 header {
-	padding-top: 5rem;
+	padding: 5rem 0 4rem;
 }
 
 h1 {
 	margin-bottom: .5rem;
 }
 
-.demo-container {
-	width: 100%;
-	height: 530px;
-	position: relative;
-	overflow: hidden;
-	border-bottom-right-radius: 10px;
-	border-bottom-left-radius: 10px;
+#about {
+    opacity: 0;
+    height: 0;
+    transition: .2s;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+#about p {
+    font-size: 1.5rem;
+    margin-bottom: .75rem;
+}
+@media (min-width: 800px) {
+    #about { width: 60% }
+}
+
+#check1, #check2, #check3 {
+    opacity: 0;
+    height: 0;
+    transition: .2s;
 }
 
 .rect {
@@ -33,8 +57,23 @@ h1 {
 	top: -1000px;
 }
 
+#process-button {
+	display: none;
+	margin: auto;
+}
+
+#snap, #drag {
+	margin: 1rem 0;
+	padding: 1rem 0;
+}
+
+#drag {
+    margin-top: 4rem;
+}
+
 .draggable {
 	margin: auto;
+	display: block;
 }
 
 .inputfile {
@@ -58,10 +97,14 @@ h1 {
 label.button-primary {
   color: #FFF;
   background-color: #33C3F0;
-  border-color: #33C3F0; 
+  border-color: #33C3F0;
 }
 
-#track {
-	display: block;
+#process, #save {
+	display: none;
 	margin: auto;
+}
+
+footer {
+	padding: 2rem;
 }
