@@ -1,11 +1,15 @@
 # Snapdragon
 
-Snap a photo and drag its items around.
+Snap a photo, drag its objects around
 
-* upload photo
-* trackingjs to detect objects by color
-* how to turn region of image into draggable object?
-	https://yangchenshen.com/2016/01/01/javascript-practice-duplicate-an-image/
-    phantomjs screencapture http://phantomjs.org/screen-capture.html
-* https://github.com/tsayen/dom-to-image
-* htmltocanvas
+Built at MAHacks June 2017
+
+Winner of .tech domain prize
+
+Right now it's only optimized for demo using sticky-notes.png (how 2 hackathon 101)
+
+TODO:
+1. Code JS functionality ground-up
+2. Make it better
+3. ???
+4. Profit
